@@ -2,12 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ameriolize_Aegis.Data;
+using Ameriolize_Aegis.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ameriolize_Aegis.Controllers
 {
     public class TeacherController : Controller
     {
+        private readonly ApplicationDbContext _db;
+
+        public TeacherController(ApplicationDbContext db)
+        {
+            _db = db;
+        }
         public IActionResult Dashboard()
         {
             return View();
@@ -15,6 +23,11 @@ namespace Ameriolize_Aegis.Controllers
 
         public IActionResult Attendance()
         {
+            var lessonPlan = new LessonPlan
+            {
+                Date = new DateTime()
+            };
+            this._db.LessonPlans.Add(lessonPlan);
             return View();
         }
 

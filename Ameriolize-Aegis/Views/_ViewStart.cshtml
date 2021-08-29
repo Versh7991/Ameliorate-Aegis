@@ -1,0 +1,15 @@
+﻿@{
+    var controller = Context.Request.RouteValues["Controller"].ToString();
+    string layout = "";
+
+    if (controller != "Home")
+    {
+        layout = "_TeacherLayout";
+    }
+    else
+    {
+        layout = "_Layout";
+    }
+    Layout = layout;
+
+}

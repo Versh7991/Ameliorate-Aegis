@@ -10,12 +10,19 @@ namespace Ameriolize_Aegis.Models
     public class LessonPlan
     {
         public long Id { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime CreationTime { get; set; }
+        public DateTime Time { get; set; }
+        public DayOfWeek Day { get; set; }
         public LessonPlanStatus Status { get; set; }
         public string Description { get; set; }
         [ForeignKey(nameof(TeacherId))]
         public Teacher Teacher { get; set; }
         public long TeacherId { get; set; }
+
+        public LessonPlan()
+        {
+            CreationTime = DateTime.Now;
+        }
 
     }
 }

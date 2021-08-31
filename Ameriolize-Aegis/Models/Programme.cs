@@ -1,23 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Ameriolize_Aegis.Models
 {
-    [Table("Teachers")]
-    public class Teacher
+    [Table("Programs")]
+    public class Programme
     {
+        [Key]
         public long Id { get; set; }
         public DateTime CreationTime { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime DoB { get; set; }
-        public string Qualification { get; set; }
-        public ICollection<Pupil> Pupils { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        [ForeignKey(nameof(CentreId))]
+        public Centre Centre { get; set; }
+        public long? CentreId { get; set; }
 
-        public Teacher()
+        public Programme()
         {
             CreationTime = DateTime.Now;
         }

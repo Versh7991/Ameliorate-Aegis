@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace Ameriolize_Aegis.Models
 {
-    [Table("Teachers")]
-    public class Teacher
+    [Table("Pro_Centres")]
+    public class ProgramCentre
     {
         public long Id { get; set; }
         public DateTime CreationTime { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public DateTime DoB { get; set; }
-        public string Qualification { get; set; }
-        public ICollection<Pupil> Pupils { get; set; }
-
-        public Teacher()
+        [ForeignKey(nameof(ProgramId))]
+        public Programme Program { get; set; }
+        public long ProgramId { get; set; }
+        [ForeignKey(nameof(CentreId))]
+        public Centre Centre { get; set; }
+        public long CentreId { get; set; }
+        public ProgramCentre()
         {
             CreationTime = DateTime.Now;
         }

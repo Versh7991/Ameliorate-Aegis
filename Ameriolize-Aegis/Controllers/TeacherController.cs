@@ -25,9 +25,9 @@ namespace Ameriolize_Aegis.Controllers
         {
             var lessonPlan = new LessonPlan
             {
-                Date = new DateTime()
+                Time = DateTime.Now
             };
-            this._db.LessonPlans.Add(lessonPlan);
+            _db.LessonPlans.Add(lessonPlan);
             return View();
         }
 

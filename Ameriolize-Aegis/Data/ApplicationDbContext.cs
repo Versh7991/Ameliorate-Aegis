@@ -1,4 +1,5 @@
-﻿using Ameriolize_Aegis.Models;
+﻿using Ameriolize_Aegis.Helper;
+using Ameriolize_Aegis.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace Ameriolize_Aegis.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Seed();
         }
     }
 }

@@ -24,6 +24,7 @@ namespace Ameriolize_Aegis.Models
         public Teacher Teacher { get; set; }
         public long? TeacherId { get; set; }
         public ICollection<ProgramEnrollment> Enrollments { get; set; }
+        public ICollection<ProgressReport> Reports { get; set; }
 
         public Pupil()
         {

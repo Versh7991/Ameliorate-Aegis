@@ -48,6 +48,12 @@
                             <p>Attendance</p>
                         </a>
                     </li>
+                    <li class="@(ViewBag.Title == "Pupils" ? "nav-item active" : "nav-item")">
+                        <a class="nav-link" asp-controller="Teacher" asp-action="Pupils">
+                            <i class="material-icons">person</i>
+                            <p>Pupils</p>
+                        </a>
+                    </li>
                     <li class="@(ViewBag.Title == "Schedule" ? "nav-item active" : "nav-item")">
                         <a class="nav-link" asp-controller="Teacher" asp-action="Schedule">
                             <i class="material-icons">content_paste</i>
@@ -227,7 +233,8 @@
 
     <!--Fullcalendar-->
     <script src="~/dashboard/assets/fullcalendar/main.js"></script>
-    <script>$(document).ready(function () {
+    <script>
+    $(document).ready(function () {
             $().ready(function () {
                 $sidebar = $('.sidebar');
 
@@ -396,7 +403,8 @@
                 });
             });
         });</script>
-    <script>$(document).ready(function () {
+    <script>
+    $(document).ready(function () {
             // Javascript method's body can be found in assets/js/demos.js
             md.initDashboardPageCharts();
 

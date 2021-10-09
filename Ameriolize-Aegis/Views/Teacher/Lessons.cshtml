@@ -1,4 +1,6 @@
-﻿@{
+﻿@model Ameriolize_Aegis.Models.ViewModels.LessonViewModel
+
+@{
     ViewData["Title"] = "Lessons";
 }
 
@@ -11,128 +13,55 @@
                     <p class="card-category">  Weekly planned lesson's</p>
                 </div>
                 <div class="card-body">
+                    <a class="btn btn-success float-right text-white mb-2" data-toggle="modal" data-target="#exampleModal">New Lesson</a>
                     <div class="table-responsive">
                         <table class="table table-hover">
-                            <thead class="">
-                            <th>
-                                Monday
-                            </th>
-                            <th>
-                                Tuesday
-                            </th>
-                            <th>
-                                Wednsday
-                            </th>
-                            <th>
-                                Thursday
-                            </th>
-                            <th>
-                                Friday 
-                            </th>
-                            </thead>
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Day
+                                </th>
+                                <th>
+                                    Start Time
+                                </th>
+                                <th>
+                                    End Time
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                            </tr>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        Song & Music
-                                    </td>
-                                    <td>
-                                        Literacy Development
-                                    </td>
-                                    <td>
-                                        Math & Science
-                                    </td>
-                                    <td>
-                                        Large/ Small Motor
-                                    </td>
-                                    <td>
-                                        Drawings
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Little sharks
-                                    </td>
-                                    <td>
-                                        Dance with Scarves
-                                    </td>
-                                    <td>
-                                        Group Coordination
-                                    </td>
-                                    <td>
-                                        Dance to music
-                                    </td>
-                                    <td>
-                                        Dance with scarves
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Learn About Red Pandor
-                                    </td>
-                                    <td>
-                                        Favorite forest hill
-                                    </td>
-                                    <td>
-                                        Rythm and flow pattern
-                                    </td>
-                                    <td>
-                                        things that start with letter M
-                                    </td>
-                                    <td>
-                                        Dancing
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Recognising number's
-                                    </td>
-                                    <td>
-                                        Recognising different shapes
-                                    </td>
-                                    <td>
-                                        Add sentences
-                                    </td>
-                                    <td>
-                                        What's a habitat?
-                                    </td>
-                                    <td>
-                                        Practice dancing
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Monkey Musk
-                                    </td>
-                                    <td>
-                                        Painting game
-                                    </td>
-                                    <td>
-                                        Group Yoga Day
-                                    </td>
-                                    <td>
-                                        Monkey Mask with paper plates
-                                    </td>
-                                    <td>
-                                        Front monkey must
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        TimeTable
-                                    </td>
-                                    <td>
-                                        drawing day
-                                    </td>
-                                    <td>
-                                        Alphabets
-                                    </td>
-                                    <td>
-                                        English speech
-                                    </td>
-                                    <td>
-                                        Bunny bear
-                                    </td>
-                                </tr>
+                                @foreach (var item in Model.LessonPlans)
+                                {
+                                    var startTime = item.StartTime.ToShortTimeString();
+                                    var endTime = item.EndTime.ToShortTimeString();
+                                    var day = item.Day.ToString();
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(model => item.Description)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(model => day)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(model => startTime)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(model => endTime)
+                                        </td>
+                                        <td>
+                                            <a href="javascript:void(0)">
+                                                <i class="material-icons text-success">edit</i>
+                                            </a>
+                                            <a href="javascript:void(0)">
+                                                <i class="material-icons text-danger">delete</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -141,4 +70,78 @@
         </div>
     </div>
 </div>
-  <a href="#" class="btn btn-success"> Edit </a><a href="#" class="btn btn-success"> Save </a>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New Lesson</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form asp-action="CreateLesson" asp-controller="Teacher">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Name</label>
+                                <input type="text" class="form-control" asp-for="Lesson.Description" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="bmd-label-floating">Day</label>
+                                <select class="form-control" asp-for="Lesson.Day">
+                                    <option value="@DayOfWeek.Monday">Monday</option>
+                                    <option value="@DayOfWeek.Tuesday">Tuesday</option>
+                                    <option value="@DayOfWeek.Wednesday">Wednesday</option>
+                                    <option value="@DayOfWeek.Thursday">Thursday</option>
+                                    <option value="@DayOfWeek.Friday">Friday</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <label class="bmd-label-floating">Start Time</label>
+                                    <input type="text" class="form-control" id="selectedStartTime" name="startTime" />
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group" twelvehour="true">
+                                <div class="input-group">
+                                    <label class="bmd-label-floating">End Time</label>
+                                    <input type="text" class="form-control" id="selectedEndTime" name="endTime" />
+                                    <div class="input-group-append">
+                                        <div class="input-group-text"><i class="fa fa-clock-o"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#selectedStartTime').timepicker({ showInputs: false });
+        $('#selectedEndTime').timepicker({ showInputs: false });
+    });
+</script>

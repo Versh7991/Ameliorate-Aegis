@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Ameriolize_Aegis.Data;
 using Ameriolize_Aegis.Models;
 using Ameriolize_Aegis.Models.ViewModels;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,24 +14,73 @@ namespace Ameriolize_Aegis.Controllers
     public class TeacherController : Controller
     {
         private readonly ApplicationDbContext _db;
-
-        public TeacherController(ApplicationDbContext db)
+        private readonly INotyfService _notyf;
+        public TeacherController(ApplicationDbContext db, INotyfService notyf)
         {
             _db = db;
+            _notyf = notyf;
         }
         public IActionResult Dashboard()
         {
             return View();
         }
 
-        public IActionResult Attendance()
+        public async Task<IActionResult> Attendance()
         {
-            var lessonPlan = new LessonPlan
+            // get today's attendance
+            var attendance = await _db.Attendances.Where(x => x.CreationTime.Date == DateTime.Now.Date).ToListAsync();
+
+            // get all pupils
+            var pupils = await _db.Pupils.ToListAsync();
+            List<PupilAttendanceViewModel> pupilAttendance = new List<PupilAttendanceViewModel>();
+            pupils.ForEach(p =>
             {
-                Time = DateTime.Now
-            };
-            _db.LessonPlans.Add(lessonPlan);
-            return View();
+                var pupil = new PupilAttendanceViewModel
+                {
+                    Id = p.Id,
+                    FirstName = p.FirstName,
+                    LastName = p.LastName,
+                    IsAttended = attendance.Find(x => x.PupilId == p.Id) != null
+
+                };
+                pupilAttendance.Add(pupil);
+            });
+            return View(pupilAttendance);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateAttendance(bool isChecked, long pupilId)
+        {
+            if (isChecked)
+            {
+                var currentAttendance = await _db.Attendances.FirstOrDefaultAsync(x => x.PupilId == pupilId && x.CreationTime.Date == DateTime.Now.Date);
+                if (currentAttendance == null)
+                {
+                    var newRecord = new Attendance
+                    {
+                        PupilId = pupilId,
+                        TeacherId = 1
+                    };
+                    _db.Add(newRecord);
+                    await _db.SaveChangesAsync();
+                    _notyf.Success("Updated Successfully", 2);
+                    return new JsonResult(new { status = "Success", message = "Updated Successfully" });
+                }
+            }
+            else
+            {
+                var currentAttendance = await _db.Attendances.FirstOrDefaultAsync(x => x.PupilId == pupilId && x.CreationTime.Date == DateTime.Now.Date);
+                if (currentAttendance != null)
+                {
+                    _db.Remove(currentAttendance);
+                    await _db.SaveChangesAsync();
+                    _notyf.Success("Updated Successfully", 2);
+                    return new JsonResult(new { status = "Success", message = "Updated Successfully" });
+                }
+
+            }
+            return RedirectToAction(nameof(Attendance));
         }
 
         public async Task<IActionResult> Pupils()
@@ -39,9 +89,14 @@ namespace Ameriolize_Aegis.Controllers
         }
 
 
-        public IActionResult Lessons()
+        public async Task<IActionResult> Lessons()
         {
-            return View();
+
+            var lessonVM = new LessonViewModel
+            {
+                LessonPlans = await _db.LessonPlans.ToListAsync()
+            };
+            return View(lessonVM);
         }
 
 
@@ -78,10 +133,14 @@ namespace Ameriolize_Aegis.Controllers
                 .ThenInclude(x => x.Period)
                 .SingleOrDefaultAsync(x => x.Id == id);
 
+            //sort progress report by term
+            var sortedReports = pupil.Reports.OrderBy(x => x.Period.Name).ToList();
+            pupil.Reports = sortedReports;
+
             PortfolioViewModel modelVM = new PortfolioViewModel()
             {
                 Pupil = pupil,
-                Periods = _db.Periods.ToList(),
+                Periods = _db.Periods.ToList().OrderBy(x => x.Name),
                 Programmes = _db.Programmes.ToList()
             };
             return View(modelVM);
@@ -92,9 +151,52 @@ namespace Ameriolize_Aegis.Controllers
             return View(await _db.Pupils.ToListAsync());
         }
 
+        public async Task<IActionResult> ViewReport(long id)
+        {
+            var pupil = await _db.Pupils.Include(x => x.Reports)
+                .ThenInclude(e => e.Program)
+                .Include(f => f.Reports)
+                .ThenInclude(x => x.Period)
+                .SingleOrDefaultAsync(x => x.Id == id);
+
+            // Sort Progress According to Term
+            var reportVM = new ReportViewModel
+            {
+                Pupil = pupil,
+                Term1 = pupil.Reports.Where(x => x.Period.Name == "Term 1").ToList(),
+                Term2 = pupil.Reports.Where(x => x.Period.Name == "Term 2").ToList(),
+                Term3 = pupil.Reports.Where(x => x.Period.Name == "Term 3").ToList(),
+                Term4 = pupil.Reports.Where(x => x.Period.Name == "Term 4").ToList(),
+            };
+            return View(reportVM);
+        }
+
         public IActionResult Schedule()
         {
             return View();
+        }
+
+
+        // Lessons
+        [HttpPost]
+        public async Task<IActionResult> CreateLesson(LessonViewModel lessonVm)
+        {
+            if (ModelState.IsValid)
+            {
+                var lesson = new LessonPlan
+                {
+                    Description = lessonVm.Lesson.Description,
+                    TeacherId = 1,
+                    StartTime = DateTime.Now,
+                    Day = lessonVm.Lesson.Day,
+                    EndTime = DateTime.Now.AddHours(2)
+                };
+                _db.Add(lesson);
+                await _db.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Lessons));
+            }
+            return View(lessonVm);
         }
     }
 }

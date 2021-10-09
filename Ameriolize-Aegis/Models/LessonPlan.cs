@@ -11,7 +11,8 @@ namespace Ameriolize_Aegis.Models
     {
         public long Id { get; set; }
         public DateTime CreationTime { get; set; }
-        public DateTime Time { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public DayOfWeek Day { get; set; }
         public LessonPlanStatus Status { get; set; }
         public string Description { get; set; }
@@ -22,6 +23,7 @@ namespace Ameriolize_Aegis.Models
         public LessonPlan()
         {
             CreationTime = DateTime.Now;
+            Status = LessonPlanStatus.Done;
         }
 
     }

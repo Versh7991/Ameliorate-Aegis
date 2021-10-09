@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<Ameriolize_Aegis.Models.ViewModels.PupilAttendanceViewModel>
+
+@{
     ViewData["Title"] = "Attendance";
 }
 
@@ -8,168 +10,50 @@
             <div class="card card-plain">
                 <div class="card-header card-header-primary">
                     <h4 class="card-title mt-0"> Student Attendance</h4>
-                    <p class="card-category"> Detail are listed below</p>
+                    <p class="card-category"> Attendance for @DateTime.Today.ToLongDateString()</p>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover">
-                            <thead class="">
-                            <th>
-                                ID
-                            </th>
-                            <th>
-                                First Name
-                            </th>
-                            <th>
-                               Last Surname
-                            </th>
-                            <th>
-                                ID Number
-                            </th>
-                            <th>
-                                Check if Attended
-                            </th>
-                            </thead>
+                            <tr class="">
+                                <th>
+                                    ID
+                                </th>
+                                <th>
+                                    First Name
+                                </th>
+                                <th>
+                                    Last Surname
+                                </th>
+                                <th>
+                                    Check if Attended
+                                </th>
+                            </tr>
                             <tbody>
-                                <tr>
-                                    <td>
-                                        1
-                                    </td>
-                                    <td>
-                                        Someleze 
-                                    </td>
-                                    <td>
-                                        Ngqokoma
-                                    </td>
-                                    <td>
-                                        98098765432
-                                    </td>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="" checked>
-                                                <span class="form-check-sign">
-                                                    <span class="check"></span>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        2
-                                    </td>
-                                    <td>
-                                        Minentle
-                                    </td>
-                                    <td>
-                                        Jonas
-                                    </td>
-                                    <td>
-                                        20009876543
-                                    </td>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="" checked>
-                                                <span class="form-check-sign">
-                                                    <span class="check"></span>
-                                                </span>
-                                            </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        3
-                                    </td>
-                                    <td>
-                                        Xolisa
-                                    </td>
-                                    <td>
-                                        Nongwele
-                                    </td>
-                                    <td>
-                                        987654327654
-                                    </td>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="" checked>
-                                                <span class="form-check-sign">
-                                                    <span class="check"></span>
-                                                </span>
-                                            </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        4
-                                    </td>
-                                    <td>
-                                        Kamohelo
-                                    </td>
-                                    <td>
-                                        Mokoena
-                                    </td>
-                                    <td>
-                                        9909752776543
-                                    </td>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="" checked>
-                                                <span class="form-check-sign">
-                                                    <span class="check"></span>
-                                                </span>
-                                            </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        5
-                                    </td>
-                                    <td>
-                                        Siphosihle
-                                    </td>
-                                    <td>
-                                        Blanket
-                                    </td>
-                                    <td>
-                                        9876543276544
-                                    </td>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="" checked>
-                                                <span class="form-check-sign">
-                                                    <span class="check"></span>
-                                                </span>
-                                            </label>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        6
-                                    </td>
-                                    <td>
-                                        Khanyo
-                                    </td>
-                                    <td>
-                                        Peter
-                                    </td>
-                                    <td>
-                                       2011098765
-                                    </td>
-                                    <td>
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value="" checked>
-                                                <span class="form-check-sign">
-                                                    <span class="check"></span>
-                                                </span>
-                                            </label>
-                                    </td>
-                                </tr>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(model => item.Id)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(model => item.FirstName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(model => item.LastName)
+                                        </td>
+                                        <td>
+                                            <div class="form-check">
+                                                <label class="form-check-label">
+                                                    @Html.CheckBoxFor(m => item.IsAttended, new { onclick = "UpdateAttendance(this)", data_pupil = item.Id, @class = "form-check-input" })
+                                                    <span class="form-check-sign">
+                                                        <span class="check"></span>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -178,4 +62,19 @@
         </div>
     </div>
 </div>
-<a href="#" class="btn btn-success"> Save </a>
+
+<script type="text/javascript">
+    function UpdateAttendance(elem) {
+    var attended = $(elem).is(':checked');
+    var data = $(elem).data('pupil');
+        console.log(attended)
+    $.ajax({
+        type: 'POST',
+        url: '@Url.Action("UpdateAttendance", "Teacher")',
+        data: { isChecked: attended, pupilId:data },
+        success: function(res) {
+            //console.log(res);
+        }
+    });
+}
+</script>

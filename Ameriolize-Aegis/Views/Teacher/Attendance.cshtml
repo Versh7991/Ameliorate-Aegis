@@ -25,7 +25,7 @@
                                 <th>
                                     Last Surname
                                 </th>
-                                <th>
+                                <th class="text-center">
                                     Check if Attended
                                 </th>
                             </tr>
@@ -42,7 +42,7 @@
                                         <td>
                                             @Html.DisplayFor(model => item.LastName)
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <div class="form-check">
                                                 <label class="form-check-label">
                                                     @Html.CheckBoxFor(m => item.IsAttended, new { onclick = "UpdateAttendance(this)", data_pupil = item.Id, @class = "form-check-input" })

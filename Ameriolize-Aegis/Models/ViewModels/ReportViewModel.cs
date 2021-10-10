@@ -12,5 +12,6 @@ namespace Ameriolize_Aegis.Models.ViewModels
         public IEnumerable<ProgressReport> Term2 { get; set; }
         public IEnumerable<ProgressReport> Term3 { get; set; }
         public IEnumerable<ProgressReport> Term4 { get; set; }
+        public double TotalAverage { get; set; }
     }
 }

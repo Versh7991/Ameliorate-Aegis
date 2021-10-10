@@ -20,9 +20,18 @@ namespace Ameriolize_Aegis.Controllers
             _db = db;
             _notyf = notyf;
         }
-        public IActionResult Dashboard()
+
+        public async Task<IActionResult> Dashboard()
         {
-            return View();
+            var pupils = await _db.Pupils.OrderByDescending(x => x.CreationTime).Take(8).ToListAsync();
+            var dashboardVM = new DashboardViewModel
+            {
+                Pupils = pupils,
+                PupilCount = await _db.Pupils.CountAsync(),
+                ParentCount = await _db.Parents.CountAsync(),
+                LessonCount = await _db.LessonPlans.CountAsync()
+            };
+            return View(dashboardVM);
         }
 
         public async Task<IActionResult> Attendance()
@@ -167,6 +176,7 @@ namespace Ameriolize_Aegis.Controllers
                 Term2 = pupil.Reports.Where(x => x.Period.Name == "Term 2").ToList(),
                 Term3 = pupil.Reports.Where(x => x.Period.Name == "Term 3").ToList(),
                 Term4 = pupil.Reports.Where(x => x.Period.Name == "Term 4").ToList(),
+                TotalAverage = pupil.Reports.Count > 0 ? Math.Round(pupil.Reports.Average(x => x.Mark), 2) : 0
             };
             return View(reportVM);
         }

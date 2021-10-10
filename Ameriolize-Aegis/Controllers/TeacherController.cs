@@ -122,8 +122,17 @@ namespace Ameriolize_Aegis.Controllers
                     TeacherId = modelVM.Progress.TeacherId,
                     PeriodId = modelVM.Progress.PeriodId
                 };
-                _db.Add(progress);
-                await _db.SaveChangesAsync();
+
+                var currentItem = await _db.ProgressReports.FirstOrDefaultAsync(x => x.PupilId == progress.PupilId && x.PeriodId == progress.PeriodId && x.ProgramId == progress.ProgramId);
+                if (currentItem == null)
+                {
+                    _db.Add(progress);
+                    await _db.SaveChangesAsync();
+                }
+                else
+                {
+                    _notyf.Error("Results Already Added For the Selected Programme");
+                }
                 return RedirectToAction(nameof(ViewPortfolio), new { id = modelVM.Progress.PupilId });
             }
             return View(modelVM);
